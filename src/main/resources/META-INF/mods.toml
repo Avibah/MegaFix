@@ -16,7 +16,7 @@ authors="Avibah"
 description='''
 A sidemod for use with Pixelmon 9.1.5
 
-Simply fixes Mega Boss spawning for until 9.1.6 releases, where this will become obselete.
+Simply fixes Mega Boss spawning for until 9.1.6 releases, where this will become obsolete.
 
 Note for server owners: This mod works by enabling an event through the spawner responsible for spawning Mega Bosses. If you were implementing a receiver for the 'LegendarySpawnEvent.ChoosePlayer' event, you may want to add a check to ensure Mega Bosses don't set off your implementation where it expects Legendaries.
 Similarly, if another mod you have expects this event to only be for Legendaries, there may be some odd behavior when the event is fired.
