@@ -12,7 +12,7 @@ public class MFConfig {
     public static final ForgeConfigSpec.ConfigValue<Boolean> EnableWormholes;
     public static final ForgeConfigSpec.ConfigValue<Integer> WormholeSpawnTicks;
     public static final ForgeConfigSpec.ConfigValue<Double> WormholeSpawnChance;
-    public static final ForgeConfigSpec.ConfigValue<Double> WormholeAge;
+    public static final ForgeConfigSpec.ConfigValue<Integer> WormholeAge;
     public static final ForgeConfigSpec.ConfigValue<Integer> WormholeDistance;
 
 
@@ -25,7 +25,7 @@ public class MFConfig {
         EnableWormholes = BUILDER.comment("\nEnable spawning wormholes").define("EnableWormholes", true);
         WormholeSpawnTicks = BUILDER.comment("\nSpawn frequency and chance for wormholes").define("WormholeSpawnTicks", 10000);
         WormholeSpawnChance = BUILDER.define("WormholeSpawnChance", 0.3);
-        WormholeAge = BUILDER.comment("\nLife span of a spawned wormhole").define("WormholeAge", 2000.0);
+        WormholeAge = BUILDER.comment("\nLife span of a spawned wormhole").define("WormholeAge", 5000);
         WormholeDistance = BUILDER.comment("\nDistance from player that a wormhole can spawn").define("WormholeDistance", 80);
 
         BUILDER.pop();
