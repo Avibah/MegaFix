@@ -1,8 +1,8 @@
 package com.avibah.megafix;
 
+import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.config.PixelmonConfigProxy;
 import com.pixelmonmod.pixelmon.spawning.LegendarySpawner;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +20,8 @@ public class MegaFix
     private boolean fixEnabled = false;
 
     private LegendarySpawner spawner;
+    private MFWormholeSpawner wormholeSpawner;
+
     private float tickRatio;
     private float chanceRatio;
     private long prevSpawnTime;
@@ -27,14 +29,18 @@ public class MegaFix
     public MegaFix() {
         LOGGER.info("Initializing MegaFix...");
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC, "megafix.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MFConfig.SPEC, "megafix.toml");
         MinecraftForge.EVENT_BUS.register(this);
+        Pixelmon.EVENT_BUS.register(this);
+
+        wormholeSpawner = new MFWormholeSpawner();
+        LOGGER.info("Prepared Wormhole spawner");
     }
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         // enable bosses and prep values on first tick
-        if (!fixEnabled) {
+        if (!fixEnabled && MFConfig.EnableMegaBosses.get()) {
             spawner = PixelmonSpawning.megaBossSpawner;
             spawner.firesChooseEvent = true;
 
@@ -45,7 +51,7 @@ public class MegaFix
             float bossChance = PixelmonConfigProxy.getSpawning().getBossSpawning().getBossSpawnChance();
 
             tickRatio = (float)bossTicks / legendaryTicks;
-            chanceRatio = AdjustForChance.get() ? legendaryChance / bossChance : 1;
+            chanceRatio = MFConfig.AdjustForChance.get() ? legendaryChance / bossChance : 1;
 
             prevSpawnTime = spawner.nextSpawnTime;
 
@@ -60,21 +66,9 @@ public class MegaFix
             spawner.nextSpawnTime = spawner.lastCycleTime + (long)(diff * tickRatio * chanceRatio);
             prevSpawnTime = spawner.nextSpawnTime;
         }
-    }
 
-
-    // config
-    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec SPEC;
-
-    public static final ForgeConfigSpec.ConfigValue<Boolean> AdjustForChance;
-
-    static {
-        BUILDER.push("MegaFix Config");
-
-        AdjustForChance = BUILDER.comment("Enable adjusting the Mega Boss spawn time for its percent chance relative to Legendary spawning").define("AdjustForChance", true);
-
-        BUILDER.pop();
-        SPEC = BUILDER.build();
+        // run wormhole spawn attempt
+        if (MFConfig.EnableWormholes.get())
+            wormholeSpawner.runSpawner();
     }
 }

@@ -7,7 +7,7 @@ license="All rights reserved"
 
 modId="megafix"
 
-version="1.0"
+version="1.1"
 displayName="MegaFix"
 logoFile=""
 
@@ -16,7 +16,7 @@ authors="Avibah"
 description='''
 A sidemod for use with Pixelmon 9.1.5
 
-Simply fixes Mega Boss spawning for until 9.1.6 releases, where this will become obsolete.
+Simply fixes Mega Boss spawning and Ultra Wormholes for until 9.1.6 releases, where this will become obsolete.
 '''
 
 [[dependencies.megafix]]

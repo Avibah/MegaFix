@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.16.5-1.0'
+version = '1.16.5-1.1'
 group = 'com.avibah.megafix'
 archivesBaseName = 'megafix'
 
@@ -84,7 +84,7 @@ jar {
         attributes([
             "Specification-Title": "megafix",
             "Specification-Vendor": "avibah",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"avibah",
