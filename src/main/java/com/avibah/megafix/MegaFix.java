@@ -33,7 +33,7 @@ public class MegaFix
         MinecraftForge.EVENT_BUS.register(this);
         Pixelmon.EVENT_BUS.register(this);
 
-        wormholeSpawner = new MFWormholeSpawner();
+        wormholeSpawner = new MFWormholeSpawner("wormholes");
         LOGGER.info("Prepared Wormhole spawner");
     }
 

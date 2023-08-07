@@ -2,6 +2,7 @@ package com.avibah.megafix;
 
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.events.spawning.SpawnEvent;
+import com.pixelmonmod.pixelmon.api.spawning.AbstractSpawner;
 import com.pixelmonmod.pixelmon.api.spawning.SpawnLocation;
 import com.pixelmonmod.pixelmon.api.spawning.archetypes.entities.wormholes.SpawnActionWormhole;
 import com.pixelmonmod.pixelmon.api.spawning.archetypes.entities.wormholes.SpawnInfoWormhole;
@@ -25,9 +26,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MFWormholeSpawner {
-    public long lastSpawn;
-    public long nextSpawn;
+public class MFWormholeSpawner extends AbstractSpawner {
+    public MFWormholeSpawner(String name) { super(name); }
+
+    public long nextSpawnTime;
 
     private double randomMultiplier() {
         return RandomHelper.getRandomNumberBetween(0.6f, 1.4f);
@@ -53,7 +55,7 @@ public class MFWormholeSpawner {
         return null;
     }
 
-    public void doSpawn() {
+    public void forceSpawn() {
         ServerPlayerEntity player = choosePlayer();
 
         if (player != null) {
@@ -89,30 +91,30 @@ public class MFWormholeSpawner {
                     player, location, types, block, blocks, biome, true, 0, 0
             );
 
-            SpawnActionWormhole action = (SpawnActionWormhole)spawnInfo.construct(null, spawnLocation);
-            SpawnEvent event = new SpawnEvent(null, action);
+            SpawnActionWormhole action = (SpawnActionWormhole)spawnInfo.construct(this, spawnLocation);
+            SpawnEvent event = new SpawnEvent(this, action);
 
             // spawn the wormhole!
             if (!Pixelmon.EVENT_BUS.post(event)) {
                 world.addFreshEntity(wormhole);
-                lastSpawn = System.currentTimeMillis();
+                this.lastSpawnTime = System.currentTimeMillis();
             }
         }
     }
 
     private void setNextSpawn(long current) {
-        nextSpawn = current + (long)(randomMultiplier() * 50.0 * MFConfig.WormholeSpawnTicks.get());
+        nextSpawnTime = current + (long)(randomMultiplier() * 50.0 * MFConfig.WormholeSpawnTicks.get());
     }
 
     public void runSpawner() {
         long current = System.currentTimeMillis();
 
-        if (nextSpawn <= 0)
+        if (nextSpawnTime <= 0)
             setNextSpawn(current);
 
-        if (current >= nextSpawn) {
+        if (current >= nextSpawnTime) {
             if (RandomHelper.getRandomChance(MFConfig.WormholeSpawnChance.get()))
-                doSpawn();
+                forceSpawn();
 
             setNextSpawn(current);
         }
